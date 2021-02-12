@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="canvas" width="500" height="500" style="border: 1px solid black"></canvas>
+</body>
+
+<script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    document.addEventListener('keydown', event => keyPress(event));
+
+    this.snake = [ { x: 100, y: 100 },{ x: 110, y: 100 },{ x: 120, y: 100 }, ];
+    this.sX = 10;
+    this.sY = 0;
+    this.food = null;
+
+    this.generateFood();
+    this.start();
+
+    function generateFood() {
+        this.food = {
+            x: Math.floor((Math.random()*500)+1),
+            y: Math.floor((Math.random()*500)+1)
+        };
+
+        if(this.food.x % 10 != 0)
+        {
+            this.food.x = this.food.x - (this.food.x % 10);
+        }
+
+        if(this.food.y % 10 != 0)
+        {
+            this.food.y = this.food.y - (this.food.y % 10);
+        }
+    }
+
+    function start() {
+        setTimeout(function() {
+            clear();
+            draw();
+            advance();
+            start();
+        }, 100);
+    }
+
+    function clear() {
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, 500, 500);
+    }
+    
+    function draw() {
+        ctx.fillStyle = 'red';
+        for(var i = 0; i < this.snake.length; i++)
+            ctx.fillRect(this.snake[i].x, this.snake[i].y, 10, 10);
+
+        if(this.food == null) return;
+
+        if(this.snake[0].x == this.food.x && this.snake[0].y == this.food.y)
+        {
+            this.generateFood();
+            this.snake.unshift({
+                x: this.snake[0].x + this.sX,
+                y: this.snake[0].y + this.sY
+            });
+        }
+        else
+        {
+            ctx.fillStyle = 'green';
+            ctx.fillRect(this.food.x, this.food.y, 10, 10);
+        }
+    }
+
+    function advance() {
+        this.snake.unshift({
+            x: this.snake[0].x + this.sX,
+            y: this.snake[0].y + this.sY
+        });
+        this.snake.pop();
+    }
+
+    function keyPress(event) {
+
+        if(event.key == 'ArrowLeft')
+        {
+            this.sX = -10;
+            this.sY = 0;
+        }
+        else if(event.key == 'ArrowRight')
+        {
+            this.sX = +10;
+            this.sY = 0;
+        }
+        else if(event.key == 'ArrowDown')
+        {
+            this.sX = 0;
+            this.sY = 10;
+        }
+        else
+        {
+            this.sX = 0;
+            this.sY = -10;
+        }
+    }
+</script>
+
+</html>
